@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .listings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .listing-item {
+    background: #fff;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .listing-image {
+    width: 100%;
+    height: 400px; 
+    overflow: hidden;
+    position: relative;
+  }
+  .listing-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Listing details */
+  .listing-details {
+    padding: 1rem;
+  }
+  .listing-details h3 {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    color: #333;
+  }
+  .listing-details p {
+    font-size: 1.6rem;
+    color: #757575;
+    margin: 0;
+  }
+
+  .listing-actions {
+    margin: 4rem 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media only screen and (max-width: 900px) {
+    .listings-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .listing-image {
+      height: 300px;
+    }
+  }
+  @media only screen and (max-width: 600px) {
+    .listings-grid {
+      grid-template-columns: 1fr;
+    }
+    .listing-image {
+      height: 250px;
+    }
+  }
+
+  .create-listing-btn {
+    text-align: center;
+    margin: 4rem 0;
+  }
+</style>
+
+<section id="listings-hero" class="s-home target-section" 
+         data-parallax="scroll" 
+         data-image-src="{% static 'images/background.jpg' %}" 
+         data-natural-width="3000" 
+         data-natural-height="2000" 
+         data-position-y="center">
+  <div class="overlay"></div>
+  <div class="shadow-overlay"></div>
+  <div class="home-content">
+    <div class="row home-content__main">
+      <h3>Trade-By-Barter</h3>
+      <h1>Explore Current Listings<br>
+          and Discover the Perfect Barter Deal
+      </h1>
+    </div>
+    <div class="home-content__line"></div>
+  </div>
+</section>
+
+<section id="listings" class="s-works">
+  <div class="intro-wrap" style="padding: 6rem 0 3rem;">
+    <div class="row section-header has-bottom-sep light-sep" data-aos="fade-up">
+      <div class="col-full">
+        <h3 class="subhead">All Items</h3>
+        <h1 class="display-2 display-2--light">Browse &amp; Barter</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="row works-content">
+    <div class="col-full">
+      <div class="listings-grid">
+        {% for listing in listings %}
+        <div class="listing-item" data-aos="fade-up">
+          <div class="listing-image">
+            <a href="{% url 'listing' listing.id %}" title="{{ listing.title }}">
+              {% if listing.image %}
+              <img src="{{ listing.image }}" alt="{{ listing.title }}">
+              {% else %}
+              <img src="{% static 'images/portfolio/placeholder.jpg' %}" alt="No Image Available">
+              {% endif %}
+            </a>
+          </div>
+          <div class="listing-details">
+            <h3>{{ listing.title }}</h3>
+            <p>{{ listing.category|default:"General" }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <div class="listing-item" data-aos="fade-up">
+          <p style="color: #333;">No listings available.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="listing-actions" data-aos="fade-up">
+    <a href="{% url 'create_listing' %}" class="btn btn--primary btn--large">Create New Listing</a>
+    <!-- Adjust 'listing_search' to your actual search URL name -->
+    <a href="{% url 'listing_search' %}" class="btn btn--primary btn--large">Search Listings</a>
+  </div>
+</section>
+{% endblock %}
